@@ -41,7 +41,7 @@ def task():
         return "Got more then 1 argument"
     number = list(args.values())[0]
     print(args)
-    print(number)
+
     if functions.is_number(number) == False:
         return "The argument does not match the task conditions"
     else:
@@ -49,7 +49,6 @@ def task():
     
     if number in values or (number + 1) in values:
         log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
-        print(log)
         f = open("log.txt", "a")
         f.write(log)
         f.close()
