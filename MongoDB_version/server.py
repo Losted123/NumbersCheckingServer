@@ -41,8 +41,9 @@ def task():
     else:
         number = int(number)
     
-    values = [i["Number"] for i in list(db.Numbers.find())]
-    if number in values or (number + 1) in values:
+    values = [i["Number"] for i in list(db.Numbers.find({"Number": { "$in": [number, number+1] } }))]
+    print(values)
+    if len(values) > 0:
         log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
         f = open("log.txt", "a")
         f.write(log)
