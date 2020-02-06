@@ -4,10 +4,8 @@ def is_number(number):
             return True
         else:
             return False
-    elif isinstance(number, str):
-        if number.isdigit() == True:
-            return True
-        else:
-            return False
+    number = str(number)
+    if number.isdigit() == True:
+        return True
     else:
         return False

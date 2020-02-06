@@ -1,0 +1,9 @@
+создаем сеть: 
+docker network create my-network
+
+запускаем контейнер с mongo (в сеть my-network)
+
+запуск сервера: 
+docker build -t web MongoDB_Docker/
+docker run --name web --net=my-network --env-file ./MongoDB_Docker/env.list -d -p 8080:8080 web
+
