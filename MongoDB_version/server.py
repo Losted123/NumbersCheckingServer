@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request
 from flask import g
 import os
-from dotenv import load_dotenv
 import functions
 from time import gmtime, strftime
 
@@ -11,16 +10,15 @@ from pymongo import MongoClient
 app = Flask(__name__)
 
 # Enviroment init
-dotenv_path = os.path.join(os.path.dirname(__file__), 'settings.env')
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path)
-    path = os.getenv('path')
-    port = os.getenv('PORT')
-else:
-    raise Exception('settings.env not found')
+path = os.environ.get('API_PATH')
+port = os.environ.get('API_PORT')
+db_path = os.environ.get("DB_PATH")
+db_port = os.environ.get("DB_PORT")
+if path is None or port is None or db_path is None or db_port is None:
+    raise Exception('Add API_PATH, API_PORT, DB_PATH and DB_PORT env vars')
 
 # Database init
-client = MongoClient('localhost:27017')
+client = MongoClient(db_path + ":" + db_port)
 db = client.Numbers
 
 
