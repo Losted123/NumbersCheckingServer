@@ -35,7 +35,6 @@ def task():
     if len(args) > 1:
         return "Got more then 1 argument"
     number = list(args.values())[0]
-    print(args)
 
     if functions.is_number(number) == False:
         return "The argument does not match the task conditions"
@@ -43,12 +42,10 @@ def task():
         number = int(number)
     
     values = [i["Number"] for i in list(db.Numbers.find({"Number": { "$in": [number, number+1] } }))]
-    print(values)
+
     if len(values) > 0:
         log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
-        f = open("log.txt", "a")
-        f.write(log)
-        f.close()
+        print(log)
         return "Number has already been received"
     
     values.append(number)
