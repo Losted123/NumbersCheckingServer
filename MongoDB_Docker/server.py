@@ -27,11 +27,14 @@ db = client.Numbers
 
 @app.route(path, methods=['GET', 'POST'])
 def task():
-    args = request.form.to_dict()
+    args = request.get_json(silent=True)
+    print(args)
     if len(args) == 0:
-        args = request.args.to_dict()
+        args = request.form.to_dict()
         if len(args) == 0:
-            return "No arguments in request"
+            args = request.args.to_dict()
+            if len(args) == 0:
+                return "No arguments in request"
     if len(args) > 1:
         return "Got more then 1 argument"
     number = list(args.values())[0]
