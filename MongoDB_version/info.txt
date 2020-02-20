@@ -1,1 +1,0 @@
-запуск mongo через  mongod --dbpath=data/db в папке mongodb_version

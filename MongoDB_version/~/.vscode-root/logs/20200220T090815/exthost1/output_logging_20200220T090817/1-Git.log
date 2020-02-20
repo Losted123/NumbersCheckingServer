@@ -1,4 +1,0 @@
-Looking for git in: /usr/bin/git
-Using git 2.21.1 (Apple Git-122.3) from /usr/bin/git
-> git rev-parse --show-toplevel
-fatal: not a git repository (or any of the parent directories): .git
