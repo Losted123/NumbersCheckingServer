@@ -29,7 +29,7 @@ db = client.Numbers
 def task():
     args = request.get_json(silent=True)
     print(args)
-    if len(args) == 0:
+    if args is None:
         args = request.form.to_dict()
         if len(args) == 0:
             args = request.args.to_dict()
