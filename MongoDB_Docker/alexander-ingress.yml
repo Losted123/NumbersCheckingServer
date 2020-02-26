@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: ns-13
+  name: alexander-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: node-13.hse
+    http:
+      paths:
+      - path: /alexander
+        backend:
+          serviceName: alexander-service
+          servicePort: 8080

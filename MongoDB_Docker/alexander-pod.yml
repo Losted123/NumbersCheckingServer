@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ns-13
+  name: alexander-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: alexander-app
+  template:
+    metadata:
+      labels:
+        app: alexander-app
+    spec:
+      containers:
+      - name: alexander-app
+        image: kupihse/alexander-service
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: API_PATH
+            value: /task
+          - name: API_PORT
+            value: "8080"
+          - name: DB_PATH
+            value: mongo-service
+          - name: DB_PORT
+            value: "27017"
+        ports:
+        - containerPort: 8080
