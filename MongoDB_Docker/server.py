@@ -7,7 +7,9 @@ from flask import g
 import os
 import functions
 from time import gmtime, strftime
+from flask import jsonify
 
+import pymongo
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -23,6 +25,7 @@ if path is None or port is None or db_path is None or db_port is None:
 # Database init
 client = MongoClient("mongodb://" + db_path + ":" + db_port)
 db = client.Numbers
+db.Numbers.create_index("Number", unique=True )
 
 
 @app.route(path, methods=['GET', 'POST'])
@@ -34,30 +37,31 @@ def task():
         if len(args) == 0:
             args = request.args.to_dict()
             if len(args) == 0:
-                return "No arguments in request"
+                return jsonify({"error": "No arguments in request"})
     if len(args) > 1:
-        return "Got more then 1 argument"
+        return jsonify({"error":"Got more then 1 argument"})
     number = list(args.values())[0]
 
     if functions.is_number(number) == False:
-        return "The argument does not match the task conditions"
+        return jsonify({"error":"The argument does not match the task conditions"})
     else:
         number = int(number)
     
-    values = [i["Number"] for i in list(db.Numbers.find({"Number": { "$in": [number, number+1] } }))]
-
-    if len(values) > 0:
+    try:
+        db.Numbers.insert_many([
+            {"Number" : number},
+            {"Number" : number+1}
+        ], ordered=True)
+    except (pymongo.errors.BulkWriteError, pymongo.errors.DuplicateKeyError):
         log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
         print(log)
-        return "Number has already been received"
+        return jsonify({"error":"Number has already been received"})
     
-    values.append(number)
-    db.Numbers.insert_one({"Number" : number})
-    return str(number + 1)
+    return jsonify({"response": str(number + 1)})
 
 @app.errorhandler(404)
 def not_found(error):
-    return "API not found, only " + path + " is available"
+    return jsonify({"error":"API not found, only " + path + " is available"})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=port)
