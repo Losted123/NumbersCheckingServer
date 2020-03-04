@@ -50,12 +50,13 @@ def task():
     try:
         db.Numbers.insert_many([
             {"Number" : number},
-            {"Number" : number+1}
+            {"Number" : number-1}
         ], ordered=True)
-    except (pymongo.errors.BulkWriteError, pymongo.errors.DuplicateKeyError):
-        log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
-        print(log)
-        return jsonify({"error":"Number has already been received"})
+    except pymongo.errors.BulkWriteError as e:
+        if e.details["writeErrors"][0]["keyValue"]["Number"] != number - 1:
+            log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
+            print(log)
+            return jsonify({"error":"Number has already been received"})
     
     return jsonify({"response": str(number + 1)})
 
