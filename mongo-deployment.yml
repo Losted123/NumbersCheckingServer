@@ -16,7 +16,7 @@ spec:
         image: mongo:latest
         resources:
           limits:
-            memory: "128Mi"
+            memory: "2048Mi"
             cpu: "500m"
         ports:
         - containerPort: 27017

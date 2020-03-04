@@ -25,7 +25,11 @@ if path is None or port is None or db_path is None or db_port is None:
 # Database init
 client = MongoClient("mongodb://" + db_path + ":" + db_port)
 db = client.Numbers
-db.Numbers.create_index("Number", unique=True )
+
+try:
+    db.Numbers.create_index("Number", unique=True )
+except pymongo.errors.DuplicateKeyError as e:
+    print("\ncreate index error: " + str(e.details))
 
 
 @app.route(path, methods=['GET', 'POST'])
@@ -52,7 +56,10 @@ def task():
             {"Number" : number},
             {"Number" : number-1}
         ], ordered=True)
+    except pymongo.errors.DuplicateKeyError as e:
+        print("\ncreate index error: " + str(e.details))
     except pymongo.errors.BulkWriteError as e:
+        print("\nBULKerror: " + str(e.details))
         if e.details["writeErrors"][0]["keyValue"]["Number"] != number - 1:
             log = strftime("%d.%m.%Y %H:%M:%S", gmtime()) + " " + str(number) + " Number has already been received\n"
             print(log)

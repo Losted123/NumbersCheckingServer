@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: alexander-app
-        image: kupihse/alexander-service
+        image: "kupihse/alexander-service:latest"
         resources:
           limits:
             memory: "128Mi"
